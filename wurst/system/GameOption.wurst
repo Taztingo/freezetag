@@ -1,0 +1,34 @@
+package GameOption
+
+import HashMap
+import HashList
+
+
+public class GameOption
+
+    private string description
+    private HashMap<string, integer> choiceValues
+    private HashList<string> choices
+
+    construct(string description)
+        this.choices = new HashList<string>
+        this.choiceValues = new HashMap<string, integer>
+        this.description = description
+
+    function addChoice(string choice, integer value)
+        this.choiceValues.put(choice, value)
+        this.choices.add(choice)
+
+    function getChoices() returns HashList<string>
+        return this.choices
+
+    function getChoiceValue(string choice) returns integer
+        return this.choiceValues.get(choice)
+
+    function getDescription() returns string
+        return this.description
+
+    ondestroy
+        destroy this.choices
+        destroy this.choiceValues
+        

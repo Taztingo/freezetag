@@ -1,0 +1,35 @@
+package main
+
+import ClosureEvents
+
+import FreezeTagEngine
+import PlayerData
+import Settings
+import SceneManager
+import StartScene
+import TeamSelectScene
+import SettingsSelectScene
+import UnitSelectScene
+import MatchStartScene
+import MatchEndScene
+import EndScene
+import ClosureTimers
+import DialogGameOptionRenderer
+
+init
+    FreezeTagEngine engine = new FreezeTagEngine(new Settings())
+    initPlayers()
+    EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
+        engine.attackUnit(GetTriggerUnit(), GetAttacker())
+
+    SceneManager sceneManager = new SceneManager()
+    sceneManager.addScene(new StartScene(engine, sceneManager))
+    sceneManager.addScene(new TeamSelectScene(engine, sceneManager))
+    sceneManager.addScene(new SettingsSelectScene(sceneManager, new DialogGameOptionRenderer()))
+    sceneManager.addScene(new UnitSelectScene(sceneManager))
+    sceneManager.addScene(new MatchStartScene())
+    sceneManager.addScene(new MatchEndScene())
+    sceneManager.addScene(new EndScene())
+
+    doAfter(.5) ->
+        sceneManager.changeScene("Start")

@@ -1,0 +1,31 @@
+package UnitSelectScene
+
+import IScene
+import SceneManager
+
+public class UnitSelectScene implements IScene
+
+    private SceneManager sceneManager
+
+    construct(SceneManager sceneManager)
+        this.sceneManager = sceneManager
+
+    override
+    function toString() returns string
+        return "Unit Select"
+    
+    override
+    function draw()
+        print("In " + toString() + " Scene")
+        this.sceneManager.changeScene("Match Start")
+
+    override
+    function load()
+        skip
+
+    override
+    function unload()
+        skip
+
+    ondestroy
+        skip

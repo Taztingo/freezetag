@@ -1,0 +1,25 @@
+package MatchEndScene
+
+import IScene
+
+public class MatchEndScene implements IScene
+    construct()
+        skip
+
+    override
+    function toString() returns string
+        return "Match End"
+
+    override
+    function draw()
+        skip
+
+    override
+    function load()
+        skip
+
+    override
+    function unload()
+
+    ondestroy
+        skip

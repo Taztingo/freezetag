@@ -1,0 +1,41 @@
+package StartScene
+
+import IScene
+import FreezeTagEngine
+import SceneManager
+
+public class StartScene implements IScene
+
+    private FreezeTagEngine engine
+    private SceneManager sceneManager
+
+    construct(FreezeTagEngine engine, SceneManager sceneManager)
+        this.engine = engine
+        this.sceneManager = sceneManager
+
+    override
+    function toString() returns string
+        return "Start"
+
+    override
+    function load()
+        skip
+
+    override
+    function unload()
+        skip
+
+    override
+    function draw()
+        SetMusicVolume(66)
+        //Play Music
+        SetTimeOfDayScale(0)
+        SetTimeOfDay(12)
+        FogMaskEnable(false)
+        FogEnable(false)
+        printTimed("|cff0000FFFreeze Tag:|r  Freeze your enemies and thaw your allies.  First team to freeze all opponents gets a point!", 30)
+        printTimed(" ", 30)
+        this.sceneManager.changeScene("Settings Select")
+
+    ondestroy
+        skip

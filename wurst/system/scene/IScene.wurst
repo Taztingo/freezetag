@@ -1,0 +1,7 @@
+package IScene
+
+public interface IScene
+    function load()
+    function unload()
+    function draw()
+    function toString() returns string

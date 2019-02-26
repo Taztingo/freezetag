@@ -1,0 +1,86 @@
+package GameSettings
+
+public enum CaptainsMode
+    ENABLED
+    DISABLED
+    RANDOM
+
+public enum UnitTypesMode
+    MELEE
+    RANGED
+    BOTH
+
+public enum RunesMode
+    ENABLED
+    DISABLED
+
+public enum GameMode
+    FREEZE_TAG
+    CAPTURE_THE_FLAG
+    BATTLE_ROYALE
+    PARTY
+
+public class GameSettings
+
+    private int points
+    private int teams
+    private CaptainsMode captains
+    private UnitTypesMode unitTypes
+    private int numberOfUnits
+    private RunesMode runes
+    private GameMode mode
+
+
+    construct()
+        this.points = 10
+        this.teams = 2
+        this.captains = CaptainsMode.DISABLED
+        this.unitTypes = UnitTypesMode.MELEE
+        this.numberOfUnits = 1
+        this.runes = RunesMode.DISABLED
+        this.mode = GameMode.FREEZE_TAG
+
+    function setPoints(int points)
+        this.points = points
+
+    function setTeams(int teams)
+        this.teams = teams
+
+    function setCaptains(CaptainsMode captains)
+        this.captains = captains
+
+    function setUnitTypes(UnitTypesMode unitTypes)
+        this.unitTypes = unitTypes
+    
+    function setNumberOfUnits(int numberOfUnits)
+        this.numberOfUnits = numberOfUnits
+
+    function setRunes(RunesMode runes)
+        this.runes = runes
+
+    function setGameMode(GameMode mode)
+        this.mode = mode
+
+    function getPoints() returns int
+        return this.points
+
+    function getTeams() returns int
+        return this.teams
+
+    function getCaptains() returns CaptainsMode
+        return this.captains
+
+    function getUnitTypes() returns UnitTypesMode
+        return this.unitTypes
+
+    function getNumberOfUnits() returns int
+        return this.numberOfUnits
+
+    function getRunes() returns RunesMode
+        return this.runes
+
+    function getGameMode() returns GameMode
+        return this.mode
+
+    ondestroy
+        skip

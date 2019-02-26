@@ -1,0 +1,25 @@
+package EndScene
+
+import IScene
+
+public class EndScene implements IScene
+    construct()
+        skip
+
+    override
+    function toString() returns string
+        return "End"
+
+    override
+    function draw()
+        skip
+
+    override
+    function load()
+        skip
+
+    override
+    function unload()
+
+    ondestroy
+        skip

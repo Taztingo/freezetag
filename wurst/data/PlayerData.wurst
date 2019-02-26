@@ -1,0 +1,96 @@
+package PlayerData
+
+import ClosureEvents
+
+public PlayerData array pData
+
+public function player.getData() returns PlayerData
+	return pData[this.getId()]
+
+public class PlayerData
+	private int freezes
+	private int thaws
+	private int frozen
+	private int thawed
+	private player nativePlayer
+	private group ownedUnits
+
+	construct(player p)
+		this.freezes = 0
+		this.thaws = 0
+		this.frozen = 0
+		this.thawed = 0
+		this.nativePlayer = p
+		this.ownedUnits = CreateGroup()
+
+	function addUnit(unit u)
+		if not this.ownedUnits.contains(u)
+			this.ownedUnits.addUnit(u)
+
+	function removeUnit(unit u)
+		if this.ownedUnits.contains(u)
+			this.ownedUnits.removeUnit(u)
+
+	function ownsUnit(unit u) returns boolean
+		return this.ownedUnits.contains(u)
+
+	function getNativePlayer() returns player
+		return this.nativePlayer
+
+	function getUnits() returns group
+		return this.ownedUnits
+
+	function addFreeze(int freezes)
+		this.freezes += freezes
+		this.nativePlayer.setState(PLAYER_STATE_RESOURCE_GOLD, this.nativePlayer.getState(PLAYER_STATE_RESOURCE_GOLD) + freezes)
+		this.nativePlayer.setState(PLAYER_STATE_RESOURCE_FOOD_USED, this.nativePlayer.getState(PLAYER_STATE_RESOURCE_FOOD_USED) + freezes)
+
+	function addFrozen(int freezes)
+		this.frozen += freezes
+
+	function addThaw(int thaws)
+		this.thaws += thaws
+		this.nativePlayer.setState(PLAYER_STATE_RESOURCE_LUMBER, this.nativePlayer.getState(PLAYER_STATE_RESOURCE_LUMBER) + freezes)
+		this.nativePlayer.setState(PLAYER_STATE_RESOURCE_FOOD_USED, this.nativePlayer.getState(PLAYER_STATE_RESOURCE_FOOD_USED) + freezes)
+
+	function addThawed(int thaws)
+		this.thawed += thaws
+
+	function getFreezes() returns int
+		return this.freezes
+
+	function getThaws() returns int
+		return this.thaws
+
+	function getFrozen() returns int
+		return this.frozen
+
+	function getThawed() returns int
+		return this.thawed
+
+	function getTotal() returns int
+		return getFreezes() + getThaws()
+
+	function equals(PlayerData p) returns boolean
+		return this.nativePlayer == p.getNativePlayer()
+
+	function allUnitsFrozen() returns boolean
+		boolean allFrozen = true
+		for u in ownedUnits
+			allFrozen = allFrozen and u.isPaused()
+		return allFrozen
+	
+	function ondestory()
+		for u in this.ownedUnits
+			u.kill()
+		DestroyGroup(this.ownedUnits)
+
+public function initPlayers()
+	for i = 0 to 23
+		//if GetPlayerSlotState(players[i]) == PLAYER_SLOT_STATE_PLAYING
+		pData[i] = new PlayerData(players[i])
+
+	EventListener.add(EVENT_PLAYER_LEAVE) ->
+		var p = GetTriggerPlayer()
+		var pd = pData[p.getId()]
+		destroy pd

@@ -1,0 +1,10 @@
+package IGameOptionRenderer
+
+import GameOption
+import LinkedList
+import IGameOptionListener
+
+public interface IGameOptionRenderer
+    function render(LinkedList<player> audience, GameOption option)
+    function unrender(LinkedList<player> audience)
+    function setListener(IGameOptionListener listener)

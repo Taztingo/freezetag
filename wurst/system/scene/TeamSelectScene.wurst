@@ -1,0 +1,57 @@
+package TeamSelectScene
+
+import IScene
+import SceneManager
+import TeamData
+import PlayerData
+import Rectangle
+import FreezeTagEngine
+
+public class TeamSelectScene implements IScene
+
+    private SceneManager sceneManager
+    private FreezeTagEngine engine
+
+    construct(FreezeTagEngine engine, SceneManager sceneManager)
+        this.sceneManager = sceneManager
+        this.engine = engine
+
+    override
+    function toString() returns string
+        return "Team Select"
+
+    override
+    function draw()
+        printTimed("Captains will now take turns drafting team members.", 30)
+        printTimed("", 30)
+        setupTeams()
+        this.sceneManager.changeScene("Unit Select")
+
+    private function setupTeams()
+        TeamData team1 = new TeamData("The Alliance", "red", new Rectangle(vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0)))
+        TeamData team2 = new TeamData("The Horde", "mint", new Rectangle(vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0)))
+
+        player red = players[0]
+        red.getData().addUnit(CreateUnit(red, 'hfoo', -1, 141, 90))
+        team1.addPlayer(red.getData())
+
+        player mint = players[18]
+        mint.getData().addUnit(CreateUnit(mint, 'hfoo', 818, 175, 90))
+        team2.addPlayer(mint.getData())
+
+        this.engine.addTeam(team1)
+        this.engine.addTeam(team2)
+
+        for i = 0 to 23
+            for i2 = 0 to 23
+                SetPlayerAllianceStateBJ(players[i], players[i2], bj_ALLIANCE_ALLIED)
+
+    override
+    function load()
+        skip
+
+    override
+    function unload()
+
+    ondestroy
+        skip

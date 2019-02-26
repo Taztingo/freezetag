@@ -1,0 +1,38 @@
+package SceneManager
+
+import HashMap
+
+import IScene
+
+public class SceneManager
+
+    private HashMap<string, IScene> scenes
+    private IScene currentScene
+
+    construct()
+        this.scenes = new HashMap<string, IScene>()
+        this.currentScene = null
+
+    function addScene(IScene scene)
+        if not this.scenes.has(scene.toString())
+            this.scenes.put(scene.toString(), scene)
+
+    function removeScene(IScene scene)
+        if this.scenes.has(scene.toString())
+            this.scenes.remove(scene.toString())
+
+    function changeScene(string sceneName)
+        if this.scenes.has(sceneName) and (this.currentScene == null or this.currentScene.toString() != sceneName)
+            IScene newScene = this.scenes.get(sceneName)
+            if this.currentScene != null
+                currentScene.unload()
+            newScene.load()
+            newScene.draw()
+            currentScene = newScene
+
+    function removeSceneByName(string sceneName)
+        if this.scenes.has(sceneName)
+            this.scenes.remove(sceneName)
+
+    ondestroy
+        destroy this.scenes

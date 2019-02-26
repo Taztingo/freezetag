@@ -1,0 +1,25 @@
+package MatchStartScene
+
+import IScene
+
+public class MatchStartScene implements IScene
+    construct()
+        skip
+
+    override
+    function toString() returns string
+        return "Match Start"
+
+    override
+    function draw()
+        print("In " + toString() + " Scene")
+
+    override
+    function load()
+        skip
+
+    override
+    function unload()
+
+    ondestroy
+        skip

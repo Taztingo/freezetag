@@ -1,0 +1,71 @@
+package TeamData
+import LinkedList
+import PlayerData
+import Rectangle
+
+public class TeamData
+    private LinkedList<PlayerData> players
+    private int points
+    private string name
+    private string teamColor
+    private Rectangle startLocation
+
+    construct(string name, string teamColor, Rectangle startLocation)
+        this.players = new LinkedList<PlayerData>()
+        this.points = 0
+        this.name = name
+        this.teamColor = teamColor
+        this.startLocation = startLocation
+
+    function setName(string name)
+        this.name = name
+
+    function getName() returns string
+        return this.name
+
+    function addPoints(int points)
+        this.points += points
+
+    function getPoints() returns int
+        return this.points
+
+    function setTeamColor(string teamColor)
+        this.teamColor = teamColor
+
+    function getTeamColor() returns string
+        return this.teamColor
+
+    function getPlayers() returns LinkedList<PlayerData>
+        return this.players
+
+    function hasPlayer(PlayerData p) returns boolean
+        return this.players.has(p)
+
+    function addPlayer(PlayerData p)
+        if not this.players.has(p)
+            this.players.add(p)
+
+    function removePlayer(PlayerData p)
+        if this.players.has(p)
+            this.players.add(p)   
+
+    function getColoredName() returns string
+        return getTeamColor() + getName()
+
+    function setStartLocation(Rectangle startLocation)
+        this.startLocation = startLocation
+
+    function getStartLocation() returns Rectangle
+        return this.startLocation
+
+    function isEliminated() returns boolean
+        return this.players.foldl(true, (p, eliminated) -> eliminated and p.allUnitsFrozen())
+
+    function hasUnit(unit u) returns boolean
+        for p in this.players
+            if p.ownsUnit(u)
+                return true
+        return false
+    
+    function ondestory()
+        destroy this.players

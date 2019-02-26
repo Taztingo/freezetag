@@ -1,0 +1,57 @@
+package GameOptionFactory
+
+import GameOption
+import GameSettings
+
+public class GameOptionFactory
+    static function createPointsOption() returns GameOption
+        GameOption victory = new GameOption("Points for victory")
+        victory.addChoice("5 (Short)", 5)
+        victory.addChoice("10 (Average)", 10)
+        victory.addChoice("15 (Long)", 15)
+        return victory
+
+    static function createTeamsOption() returns GameOption
+        GameOption teams = new GameOption("Number of teams")
+        teams.addChoice("2 Teams", 2)
+        teams.addChoice("3 Teams", 3)
+        teams.addChoice("4 Teams", 4)
+        teams.addChoice("6 Teams", 6)
+        teams.addChoice("8 Teams", 8)
+        teams.addChoice("12 Teams", 12)
+        teams.addChoice("Free For All", 24)
+        return teams
+
+    static function createCaptainsOption() returns GameOption
+        GameOption captains = new GameOption("Pick Players")
+        captains.addChoice("Yes", CaptainsMode.ENABLED castTo int)
+        captains.addChoice("No", CaptainsMode.DISABLED castTo int)
+        captains.addChoice("Random", CaptainsMode.RANDOM castTo int)
+        return captains
+
+    static function createUnitTypesOption() returns GameOption
+        GameOption unitTypes = new GameOption("Unit Types")
+        unitTypes.addChoice("Melee Only", UnitTypesMode.MELEE castTo int)
+        unitTypes.addChoice("Ranged Only", UnitTypesMode.RANGED castTo int)
+        unitTypes.addChoice("Melee and Ranged", UnitTypesMode.BOTH castTo int)
+        return unitTypes
+
+    static function createNumberOfUnitsOption() returns GameOption
+        GameOption numberOfUnits = new GameOption("Number of Units")
+        numberOfUnits.addChoice("1 Unit", 1)
+        numberOfUnits.addChoice("2 Units (Clone Tag)", 2)
+        return numberOfUnits
+
+    static function createRunesOption() returns GameOption
+        GameOption runes = new GameOption("Runes")
+        runes.addChoice("Yes", RunesMode.ENABLED castTo int)
+        runes.addChoice("No", RunesMode.DISABLED castTo int)
+        return runes
+
+    static function createModeOption() returns GameOption
+        GameOption mode = new GameOption("Mode")
+        mode.addChoice("Normal", GameMode.FREEZE_TAG castTo int)
+        mode.addChoice("Capture The Flag", GameMode.CAPTURE_THE_FLAG castTo int)
+        mode.addChoice("Battle Royale", GameMode.BATTLE_ROYALE castTo int)
+        mode.addChoice("Party Mode", GameMode.PARTY castTo int)
+        return mode

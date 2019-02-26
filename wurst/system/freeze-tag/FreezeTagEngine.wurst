@@ -1,0 +1,130 @@
+package FreezeTagEngine
+
+import LinkedList
+
+import PlayerData
+import TeamData
+import IGameoverListener
+import IRoundListener
+import IFreezeListener
+import IThawListener
+import Settings
+
+public class FreezeTagEngine
+    private LinkedList<TeamData> teams
+    
+    private IGameoverListener gameoverListener
+    private IRoundListener roundListener
+    private IFreezeListener freezeListener
+    private IThawListener thawListener
+
+    private Settings settings
+
+    construct(Settings settings)
+        this.teams = new LinkedList<TeamData>()
+        this.settings = settings
+        this.gameoverListener = null
+        this.roundListener = null
+        this.freezeListener = null
+        this.thawListener = null
+
+    function attackUnit(unit attacked, unit attacking)
+        PlayerData attackedOwner = attacked.getOwner().getData()
+        PlayerData attackingOwner = attacking.getOwner().getData()
+
+        for team in this.teams
+            if team.hasPlayer(attackedOwner) and team.hasPlayer(attackingOwner) and attacked.isPaused()
+                thawUnit(attacked, attacking)
+            if team.hasPlayer(attackedOwner) and not team.hasPlayer(attackingOwner) and not attacked.isPaused()
+                freezeUnit(attacked, attacking)
+
+    private function freezeUnit(unit attacked, unit attacking)
+        attacked.setTimeScale(0.0)
+        attacked.setVertexColor(this.settings.getFreezeColor())
+        attacked.issueImmediateOrder("stop")
+        attacked.pause()
+
+        //Adjust score
+        attacking.getOwner().getData().addFreeze(1)
+        attacked.getOwner().getData().addFrozen(1)
+
+        //Display message
+        color actionColor = color(255, 255, 255)
+        string actionText = actionColor.toColorString() + " has frozen "
+        string attackingPlayerName = attacking.getOwner().getNameColored()
+        string attackedPlayerName = attacked.getOwner().getNameColored()
+        string message = attackingPlayerName + actionText + attackedPlayerName
+        printTimed(message, this.settings.getActionMessageTime())
+
+        //Ping minimap
+        PingMinimap(attacked.getX(), attacked.getY(), this.settings.getActionPingTime())
+
+        this.freezeListener.onFreeze(attacked, attacking)
+
+        //Check for round over
+        if not this.settings.getIsRoundsEnabled()
+            return
+        
+        LinkedList<TeamData> alive = teams.filter((team) -> not team.isEliminated())
+        LinkedList<TeamData> eliminated = teams.filter((team) -> team.isEliminated())
+        if alive.size() == 1
+            roundOver(alive.get(0), eliminated)
+        destroy alive
+        destroy eliminated
+
+    private function roundOver(TeamData winner, LinkedList<TeamData> losers)
+        winner.addPoints(1)
+
+        //Print victory message
+        print(winner.getName() + " has won the round! They now have " + winner.getPoints().toString() + " out of " + this.settings.getPointsForVictory().toString() + " points to win the game.")
+
+        if winner.getPoints() != this.settings.getPointsForVictory()
+            this.roundListener.onRoundListener(winner, losers)
+        else
+            this.gameoverListener.onGameover(winner, losers)
+    
+    private function thawUnit(unit attacked, unit attacking)
+        attacked.setTimeScale(1.0)
+        attacked.setVertexColor(255, 255, 255, 0)
+        attacked.unpause()
+
+        //Adjust score
+        attacking.getOwner().getData().addThaw(1)
+        attacked.getOwner().getData().addThawed(1)
+
+        //Display message
+        color actionColor = color(255, 255, 255)
+        string actionText = actionColor.toColorString() + " has thawed "
+        string attackingPlayerName = attacking.getOwner().getNameColored()
+        string attackedPlayerName = attacked.getOwner().getNameColored()
+        string message = attackingPlayerName + actionText + attackedPlayerName
+        printTimed(message, this.settings.getActionMessageTime())
+
+        //Ping minimap
+        PingMinimap(attacked.getX(), attacked.getY(), this.settings.getActionPingTime())
+
+        this.thawListener.onThaw(attacked, attacking)
+
+    function addTeam(TeamData team)
+        if not this.teams.has(team)
+            this.teams.add(team)
+
+    function removeTeam(TeamData team)
+        if this.teams.has(team)
+            this.teams.remove(team)
+
+    function setGameoverListener(IGameoverListener listener)
+        this.gameoverListener = listener
+
+    function setRoundListener(IRoundListener listener)
+        this.roundListener = listener
+
+    function setFreezeListener(IFreezeListener listener)
+        this.freezeListener = listener
+
+    function setThawListener(IThawListener listener)
+        this.thawListener = listener
+
+    ondestroy
+        destroy this.teams
+        destroy this.settings

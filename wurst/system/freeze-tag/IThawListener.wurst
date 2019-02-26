@@ -1,0 +1,4 @@
+package IThawListener
+
+public interface IThawListener
+    function onThaw(unit attacked, unit attacking)

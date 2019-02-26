@@ -1,0 +1,48 @@
+package DialogGameOptionRenderer
+
+import IGameOptionRenderer
+import IGameOptionListener
+import GameOption
+import DialogBox
+import LinkedList
+
+public class DialogGameOptionRenderer implements IGameOptionRenderer
+
+    private DialogBox dialogBox
+    private IGameOptionListener listener
+
+    construct()
+        this.dialogBox = null
+        this.listener = null
+
+    override
+    function render(LinkedList<player> audience, GameOption option)
+        this.dialogBox = new DialogBox(option.getDescription())
+
+        for choice in option.getChoices()
+            integer value = option.getChoiceValue(choice)
+            this.dialogBox.addButton(choice, -> begin
+                if this.dialogBox != null
+                    destroy this.dialogBox
+                    this.dialogBox = null
+                if this.listener != null
+                    this.listener.run(value)
+            end)
+
+        for p in audience
+            this.dialogBox.display(p, true)
+
+    override
+    function unrender(LinkedList<player> audience)
+        for p in audience
+            this.dialogBox.display(p, false)
+
+
+    override
+    function setListener(IGameOptionListener listener)
+        this.listener = listener
+
+    ondestroy
+        if this.dialogBox != null
+            destroy this.dialogBox
+            this.dialogBox = null

@@ -1,0 +1,7 @@
+package IRoundListener
+
+import TeamData
+import LinkedList
+
+public interface IRoundListener
+    function onRoundListener(TeamData winner, LinkedList<TeamData> losers)

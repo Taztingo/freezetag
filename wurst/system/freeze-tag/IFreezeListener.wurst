@@ -1,0 +1,4 @@
+package IFreezeListener
+
+public interface IFreezeListener
+    function onFreeze(unit attacked, unit attacking)

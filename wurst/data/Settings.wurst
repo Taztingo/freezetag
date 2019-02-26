@@ -1,0 +1,48 @@
+package Settings
+
+public class Settings
+    private int pointsForVictory
+    private color freezeColor
+    private boolean isRoundsEnabled
+    private real actionMessageTime
+    private real actionPingTime
+
+    construct()
+        this.pointsForVictory = 10
+        this.isRoundsEnabled = true
+        this.freezeColor = color(0, 0, 255)
+        this.actionMessageTime = 10.0
+        this.actionPingTime = 2.0
+
+    function setPointsForVictory(int points)
+        this.pointsForVictory = points
+
+    function getPointsForVictory() returns int
+        return this.pointsForVictory
+
+    function setFreezecolor(color freezeColor)
+        this.freezeColor = freezeColor
+
+    function getFreezeColor() returns color
+        return this.freezeColor
+
+    function setIsRoundsEnabled(boolean enabled)
+        this.isRoundsEnabled = enabled
+
+    function getIsRoundsEnabled() returns boolean
+        return this.isRoundsEnabled
+
+    function setActionPingTime(real time)
+        this.actionPingTime = time
+
+    function getActionPingTime() returns real
+        return this.actionPingTime
+
+    function setActionMessageTime(real time)
+        this.actionMessageTime = time
+
+    function getActionMessageTime() returns real
+        return this.actionMessageTime
+
+    ondestroy
+        skip

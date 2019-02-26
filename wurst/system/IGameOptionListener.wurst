@@ -1,0 +1,4 @@
+package IGameOptionListener
+
+public interface IGameOptionListener
+    function run(integer value)

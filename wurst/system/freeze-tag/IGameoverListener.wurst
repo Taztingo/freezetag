@@ -1,0 +1,7 @@
+package IGameoverListener
+
+import TeamData
+import LinkedList
+
+public interface IGameoverListener
+    function onGameover(TeamData winner, LinkedList<TeamData> losers)

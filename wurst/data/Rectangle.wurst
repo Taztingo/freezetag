@@ -1,0 +1,26 @@
+package Rectangle
+
+public class Rectangle
+    vec2 topLeft
+    vec2 topRight
+    vec2 bottomLeft
+    vec2 bottomRight
+
+    construct(vec2 topLeft, vec2 topRight, vec2 bottomLeft, vec2 bottomRight)
+        this.topLeft = topLeft
+        this.topRight = topRight
+        this.bottomLeft = bottomLeft
+        this.bottomRight = bottomRight
+
+    function getCenter() returns vec2
+        real x = (topRight.x + topLeft.x) / 2.0
+        real y = (topLeft.y + bottomLeft.y) / 2.0
+        return vec2(x, y)
+
+    function getRandom() returns vec2
+        real x = GetRandomReal(topLeft.x, topRight.x)
+        real y = GetRandomReal(topLeft.y, bottomLeft.y)
+        return vec2(x, y)
+
+    ondestroy
+        skip

@@ -1,0 +1,160 @@
+package SettingsSelectScene
+
+import IScene
+import SceneManager
+import GameOption
+import LinkedList
+import IGameOptionRenderer
+import IGameOptionListener
+import GameOptionFactory
+import ClosureTimers
+import GameSettings
+
+public class SettingsSelectScene implements IScene
+
+    private SceneManager sceneManager
+    private LinkedList<GameOption> options
+    private LinkedList<IGameOptionListener> listeners
+    private integer optionCounter
+    private IGameOptionRenderer optionRenderer
+    private LinkedList<player> audience
+
+    construct(SceneManager sceneManager, IGameOptionRenderer optionRenderer)
+        this.sceneManager = sceneManager
+        this.optionRenderer = optionRenderer
+        this.options = new LinkedList<GameOption>()
+        this.listeners = new LinkedList<IGameOptionListener>()
+        this.audience = new LinkedList<player>()
+        this.audience.add(players[0])
+
+    override
+    function toString() returns string
+        return "Settings Select"
+    
+    override
+    function draw()
+        real waitTime = 15
+        printTimed("Player 1 (Red) now has " + R2S(waitTime) + " seconds to choose the settings for the game", waitTime)
+        doAfter(15.0) ->
+            print("15 seconds is up")
+            this.sceneManager.changeScene("Team Select")
+        loadNextDialog()
+
+    function loadNextDialog()
+        if this.optionCounter < this.options.size()
+            optionRenderer.setListener(this.listeners.get(this.optionCounter))
+            optionRenderer.render(this.audience, this.options.get(this.optionCounter))
+            this.optionCounter++
+
+    override
+    function load()
+        this.optionCounter = 0
+
+        this.options.add(GameOptionFactory.createPointsOption())
+        this.listeners.add((choice) -> onScoreSelected(choice))
+
+        this.options.add(GameOptionFactory.createTeamsOption())
+        this.listeners.add((choice) -> onTeamsSelected(choice))
+
+        this.options.add(GameOptionFactory.createCaptainsOption())
+        this.listeners.add((choice) -> onCaptainsModeSelected(choice))
+
+        this.options.add(GameOptionFactory.createUnitTypesOption())
+        this.listeners.add((choice) -> onUnitTypesSelected(choice))
+
+        this.options.add(GameOptionFactory.createNumberOfUnitsOption())
+        this.listeners.add((choice) -> onNumberOfUnitsSelected(choice))
+
+        this.options.add(GameOptionFactory.createRunesOption())
+        this.listeners.add((choice) -> onRunesSelected(choice))
+
+        this.options.add(GameOptionFactory.createModeOption())
+        this.listeners.add((choice) -> onModeSelected(choice))
+
+    override
+    function unload()
+        optionRenderer.unrender(this.audience)
+        for option in options
+            destroy option
+
+    private function onScoreSelected(int option)
+        string message = GetPlayerName(players[0]) + " has chosen " + option.toString() + " points."
+        printTimed(message, 10)
+        loadNextDialog()
+
+    private function onTeamsSelected(int option)
+        string message
+        if option == 24
+            message = GetPlayerName(players[0]) + " has chosen FFA mode."
+        else
+            message = GetPlayerName(players[0]) + " has chosen " + option.toString() + " teams."
+        printTimed(message, 10)
+        loadNextDialog()
+
+    private function onCaptainsModeSelected(int option)
+        string message = ""
+        CaptainsMode mode = option castTo CaptainsMode
+        switch mode
+            case CaptainsMode.DISABLED
+                message = GetPlayerName(players[0]) + " has chosen default teams."
+            case CaptainsMode.ENABLED
+                message = GetPlayerName(players[0]) + " has chosen to enable team picking."
+            case CaptainsMode.RANDOM
+                message = GetPlayerName(players[0]) + " has chosen random teams."
+            
+        printTimed(message, 10)
+        loadNextDialog()
+
+    private function onUnitTypesSelected(int option)
+        string message = ""
+        UnitTypesMode mode = option castTo UnitTypesMode
+        switch mode
+            case UnitTypesMode.MELEE
+                message = GetPlayerName(players[0]) + " has chosen melee units only."
+            case UnitTypesMode.RANGED
+                message = GetPlayerName(players[0]) + " has chosen ranged units only."
+            case UnitTypesMode.BOTH
+                message = GetPlayerName(players[0]) + " has chosen melee and ranged units."
+        printTimed(message, 10)
+        loadNextDialog()
+
+    private function onNumberOfUnitsSelected(int option)
+        string message = ""
+        switch option
+            case 1
+                message = GetPlayerName(players[0]) + " has chosen 1 unit."
+            case 2
+                message = GetPlayerName(players[0]) + " has chosen 2 units (Clone Tag)."
+        printTimed(message, 10)
+        loadNextDialog()
+
+    private function onRunesSelected(int option)
+        string message = ""
+        RunesMode runes = option castTo RunesMode
+        switch runes
+            case RunesMode.DISABLED
+                message = GetPlayerName(players[0]) + " has chosen to disable runes."
+            case RunesMode.ENABLED
+                message = GetPlayerName(players[0]) + " has chosen to enable runes."
+        printTimed(message, 10)
+        loadNextDialog()
+
+    private function onModeSelected(int option)
+        string message = ""
+        GameMode mode = option castTo GameMode
+        switch mode
+            case GameMode.FREEZE_TAG
+                message = GetPlayerName(players[0]) + " has chosen Freeze Tag."
+            case GameMode.CAPTURE_THE_FLAG
+                message = GetPlayerName(players[0]) + " has chosen Capture The Flag."
+            case GameMode.BATTLE_ROYALE
+                message = GetPlayerName(players[0]) + " has chosen Battle Royale."
+            case GameMode.PARTY
+                message = GetPlayerName(players[0]) + " has chosen Party Mode."
+        printTimed(message, 10)
+        loadNextDialog()
+
+    ondestroy
+        destroy this.options
+        destroy this.listeners
+        destroy this.audience
